@@ -1,29 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Asi se declara un menu -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <!-- Agrupo bajo un mismo titulo -->
-    <item android:title="Comunicar">
-        <!-- Menu adentro del menu (mas de un item) -->
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_camera"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Import" />
+        <item
+            android:id="@+id/nav_gallery"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Gallery" />
+        <item
+            android:id="@+id/nav_slideshow"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Slideshow" />
+        <item
+            android:id="@+id/nav_manage"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Tools" />
+    </group>
+
+    <item android:title="Communicate">
         <menu>
             <item
-                android:id="@+id/share"
+                android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Compartir" />
+                android:title="Share" />
             <item
-                android:id="@+id/contact"
+                android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Contacto" />
+                android:title="Send" />
         </menu>
     </item>
-
-    <!-- Item fuera del grupo "Comunicar" alineado como ultimo en la lista (orderInCategori mas grande que los demas items) -->
-    <item
-        android:orderInCategory="100"
-        android:id="@+id/close_session"
-        android:icon="@drawable/power"
-        android:title="Cerrar Sesion" />
 
 </menu>
