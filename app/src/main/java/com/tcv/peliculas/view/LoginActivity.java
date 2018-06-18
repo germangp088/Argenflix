@@ -3,6 +3,7 @@ package com.tcv.peliculas.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     private void inicializarVista() {
         final EditText usuarioEt = (EditText) findViewById(R.id.usuario_et);
         final EditText contraseñaEt = (EditText) findViewById(R.id.password_et);
+        Button recuperarBtn = (Button) findViewById(R.id.recuperar_btn);
         Button ingresarBtn = (Button) findViewById(R.id.enter_btn);
 
         ingresarBtn.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +73,15 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+        recuperarBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                enviarEmail();
+            }
+        });
     }
 
     private void persistirCredenciales(String usuario, String contraseña)
@@ -81,5 +92,21 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("usuario",usuario);
         editor.commit();
+    }
+
+    private void enviarEmail() {
+        final EditText usuarioEt = (EditText) findViewById(R.id.usuario_et);
+        Intent emailIntent = new Intent (android.content.Intent.ACTION_SEND);
+        emailIntent.setType ("simple / texto");
+        String emailTo = "user@fakehost.com";
+        String app = "soporte@Argentflix.com";
+        String subject = "Problema para ingresar a Argenflix";
+        String texto = "Mi usuario es  "+usuarioEt.getText().toString()
+                +", solicito un blanqueo de clave. ";
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, emailTo);
+        emailIntent.putExtra(Intent.EXTRA_CC, app);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, texto);
+        startActivity (emailIntent);
     }
 }

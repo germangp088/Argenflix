@@ -7,39 +7,55 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/argenflix_ic"/>
+        android:adjustViewBounds="false"
+        android:cropToPadding="false"
+        android:scaleType="fitStart"
+        android:src="@drawable/argenflix_ic" />
 
     <LinearLayout
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="40dp"
-    android:gravity="bottom">
-
-    <EditText
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Usuario"
-        android:id="@+id/usuario_et"/>
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:padding="40dp">
 
-    <EditText
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Contraseña"
-        android:inputType="textPassword"
-        android:id="@+id/password_et"/>
+        <EditText
+            android:id="@+id/usuario_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Usuario" />
 
-    <Button
-        android:layout_marginTop="10dp"
-        android:layout_width="120dp"
-        android:layout_height="50dp"
-        android:id="@+id/enter_btn"
-        android:text="Entrar"
-        android:layout_gravity="center"
-        android:textColor="#FFFFFFFF"
-        android:backgroundTint="@color/colorPrimary"/>
+        <EditText
+            android:id="@+id/password_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Contraseña"
+            android:inputType="textPassword" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/enter_btn"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:text="Entrar"
+            android:textColor="#FFFFFFFF" />
+
+
+        <Button
+            android:id="@+id/recuperar_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:text="Olvide Mi Contraseña"
+            android:textColor="#FFFFFFFF" />
+
+
+    </LinearLayout>
 
 </FrameLayout>

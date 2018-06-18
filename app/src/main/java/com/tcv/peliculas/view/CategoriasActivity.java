@@ -127,19 +127,11 @@ public class CategoriasActivity extends AppCompatActivity
             return true;
         }
         if (id == R.id.action_contactarse) {
-            enviarEmail();
+            //enviarEmail();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void enviarEmail() {
-        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                "mailto","contacto@peliculas.com", null));
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Contacto de " + categoriasViewModel.getUsername());
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "");
-        startActivity(Intent.createChooser(emailIntent, "Enviar email..."));
     }
 
     private void cerrarSesion() {
@@ -154,5 +146,4 @@ public class CategoriasActivity extends AppCompatActivity
         startActivity(intent);
         finish();
     }
-
 }

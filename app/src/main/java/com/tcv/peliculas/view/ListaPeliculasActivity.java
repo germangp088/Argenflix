@@ -113,41 +113,4 @@ public class ListaPeliculasActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
-    /*@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        //Usar esto para cerrar sesion desde aca
-        if (id == R.id.action_settings) {
-            cerrarSesion();
-            return true;
-        }
-        if (id == R.id.action_contactarse) {
-            enviarEmail();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void enviarEmail() {
-        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                "mailto","contacto@peliculas.com", null));
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Contacto de " + peliculasViewModel.getUsername());
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "");
-        startActivity(Intent.createChooser(emailIntent, "Enviar email..."));
-    }
-
-    private void cerrarSesion() {
-        SharedPreferences sharedPreferences =
-            getSharedPreferences(getString(R.string.app_name),
-                    Context.MODE_PRIVATE);
-        sharedPreferences.edit().clear().commit();
-
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
-    }*/
 }
