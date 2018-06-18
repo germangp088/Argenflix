@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (usuario.equals("alan") && contraseña.equals("1234")) {
                     persistirCredenciales("alan","1234");
                     Intent intent = new Intent(LoginActivity.this,
-                            ListaPeliculasActivity.class);
+                            CategoriasActivity.class);
                     LoginActivity.this.startActivity(intent);
                     LoginActivity.this.finish();
                 } else {
