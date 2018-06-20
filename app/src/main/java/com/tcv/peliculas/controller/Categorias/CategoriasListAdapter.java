@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.tcv.peliculas.R;
 import com.tcv.peliculas.controller.Peliculas.PeliculasListAdapter;
-import com.tcv.peliculas.controller.PeliculasViewModel;
+import com.tcv.peliculas.controller.Peliculas.PeliculasViewModel;
 import com.tcv.peliculas.model.Categoria;
 
 import java.util.List;

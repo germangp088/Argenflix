@@ -3,7 +3,6 @@ package com.tcv.peliculas.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -13,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +21,7 @@ import android.widget.Toast;
 import com.tcv.peliculas.R;
 import com.tcv.peliculas.api.ApiClient;
 import com.tcv.peliculas.controller.Categorias.CategoriasListAdapter;
-import com.tcv.peliculas.controller.CategoriasViewModel;
+import com.tcv.peliculas.controller.Categorias.CategoriasViewModel;
 import com.tcv.peliculas.model.Categoria;
 
 import java.util.ArrayList;
@@ -90,9 +90,7 @@ public class CategoriasActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.cerrar_sesion) {
             cerrarSesion();
         }
 
@@ -105,7 +103,44 @@ public class CategoriasActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+
+        MenuItem mSearch = menu.findItem(R.id.action_search);
+
+        SearchView mSearchView = (SearchView) mSearch.getActionView();
+        mSearchView.setQueryHint("Search");
+
+       mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String titulo) {
+                //search(titulo);
+                return true;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void search(String titulo){
+        ApiClient.getClient(this).getCategorias().enqueue(new Callback<List<Categoria>>() {
+            @Override
+            public void onResponse(Call<List<Categoria>> call, Response<List<Categoria>> response) {
+                categorias.clear();
+                List<Categoria> categoriasResponse = response.body();
+                categorias.addAll(categoriasResponse);
+                categoriasAdapter.notifyDataSetChanged();
+                Toast.makeText(CategoriasActivity.this, "Ocurrio un error al querer obtener la lista de peliculas.", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Categoria>> call, Throwable throwable) {
+                Toast.makeText(CategoriasActivity.this, "Ocurrio un error al querer obtener la lista de peliculas.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -116,22 +151,6 @@ public class CategoriasActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        //Usar esto para cerrar sesion desde aca
-        if (id == R.id.action_settings) {
-            cerrarSesion();
-            return true;
-        }
-        if (id == R.id.action_contactarse) {
-            //enviarEmail();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void cerrarSesion() {

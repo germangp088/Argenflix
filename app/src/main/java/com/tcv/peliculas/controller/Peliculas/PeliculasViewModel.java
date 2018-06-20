@@ -1,4 +1,4 @@
-package com.tcv.peliculas.controller;
+package com.tcv.peliculas.controller.Peliculas;
 
 
 import android.content.Context;
