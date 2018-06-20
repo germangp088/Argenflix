@@ -16,7 +16,7 @@ public class Favorito {
     }
 
     public static final String CREATE_TABLE =
-        "CREATE TABLE " + TABLE_NAME + "("
+        "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + COLUMN_PELICULA+ " INT,"
                 + COLUMN_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP"

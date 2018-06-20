@@ -75,9 +75,7 @@ public class CategoriasActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.cerrar_sesion) {
+        }  else if (id == R.id.cerrar_sesion) {
             cerrarSesion();
         }
 

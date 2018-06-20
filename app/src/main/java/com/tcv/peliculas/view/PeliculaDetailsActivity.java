@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,15 +16,27 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.tcv.peliculas.R;
 import com.tcv.peliculas.model.Pelicula;
+import com.tcv.peliculas.persistence.DatabaseHelper;
 
 public class PeliculaDetailsActivity extends AppCompatActivity {
+
+    DatabaseHelper dbHelper;
+    boolean favorite = false;
+    Pelicula pelicula;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pelicula_details);
 
+        dbHelper = new DatabaseHelper(this);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         Bundle args = getIntent().getExtras();
-        final Pelicula pelicula = new Gson().fromJson(args.getString("pelicula"), Pelicula.class);
+        pelicula = new Gson().fromJson(args.getString("pelicula"), Pelicula.class);
+
+        favorite = dbHelper.getIfIsFavorito(pelicula.getId());
 
         TextView titulo = (TextView) findViewById(R.id.titulo);
         titulo.setText(pelicula.getTitulo());
@@ -55,6 +70,40 @@ public class PeliculaDetailsActivity extends AppCompatActivity {
             imagen.setImageResource(pelicula.getImagen());
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_details, menu);
+
+        MenuItem mFav = menu.findItem(R.id.action_fav);
+
+        if(favorite) {
+            mFav.setIcon(R.drawable.favcheck);
+        }
+        else{
+            mFav.setIcon(R.drawable.fav);
+        }
+
+        mFav.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if(favorite) {
+                    dbHelper.deleteFavorito(pelicula.getId(), null);
+                    item.setIcon(R.drawable.fav);
+                    favorite = false;
+                }
+                else{
+                    dbHelper.insertarFavorito(pelicula.getId(), null);
+                    item.setIcon(R.drawable.favcheck);
+                    favorite = true;
+                }
+                return true;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
 
 }
