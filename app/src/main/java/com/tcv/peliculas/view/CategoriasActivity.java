@@ -124,18 +124,30 @@ public class CategoriasActivity extends AppCompatActivity
                         for (Categoria categoria : categoriasResponse) {
                             int peliculasCount = 0;
                             for (Pelicula pelicula : categoria.getPeliculas()) {
+                                //Si la pelicula no contiene el texto buscado en el titulo lo agrega a peliculas a remover.
                                 if(!pelicula.getTitulo().toLowerCase().contains(titulo.toLowerCase())){
                                     peliculasCount++;
                                     peliculasToRemove.add(pelicula);
                                 }
                             }
+                            //Si la categoria no contiene peliculas se agrega a categorias a remover.
                             if(peliculasCount == categoria.getPeliculas().size()){
                                 categoriasToRemove.add(categoria);
                             }
                         }
 
+                        //Se remueven las categorias vacias.
                         for (Categoria categoria : categoriasToRemove) {
                             categoriasResponse.remove(categoria);
+                        }
+
+                        //Se remueven las peliculas no encontradas.
+                        for (Pelicula pelicula : peliculasToRemove) {
+                            for (Categoria categoria : categoriasResponse) {
+                                if(categoria.getPeliculas().contains(pelicula)){
+                                    categoria.getPeliculas().remove(pelicula);
+                                }
+                            }
                         }
                     }
                     catch (Exception e){
