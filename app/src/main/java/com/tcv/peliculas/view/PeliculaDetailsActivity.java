@@ -21,7 +21,7 @@ public class PeliculaDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pelicula_details);
 
         Bundle args = getIntent().getExtras();
-        Pelicula pelicula = new Gson().fromJson(args.getString("pelicula"), Pelicula.class);
+        final Pelicula pelicula = new Gson().fromJson(args.getString("pelicula"), Pelicula.class);
 
         TextView titulo = (TextView) findViewById(R.id.titulo);
         titulo.setText(pelicula.getTitulo());
@@ -47,11 +47,12 @@ public class PeliculaDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PeliculaDetailsActivity.this, VerPeliculaActivity.class);
+                intent.putExtra("link", pelicula.getVideoUrl());
                 PeliculaDetailsActivity.this.startActivity(intent);
             }
         });
         if(pelicula.getImagen() != 0) {
-            //imagen.setImageResource(pelicula.getImagen());
+            imagen.setImageResource(pelicula.getImagen());
         }
 
     }

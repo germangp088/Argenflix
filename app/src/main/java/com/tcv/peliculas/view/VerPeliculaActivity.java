@@ -1,5 +1,6 @@
 package com.tcv.peliculas.view;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -17,15 +18,17 @@ public class VerPeliculaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ver_pelicula);
 
         YouTubePlayerView youTubePlayerView = (YouTubePlayerView) findViewById(R.id.youtube_player_view);
-
+        youTubePlayerView.enterFullScreen();
         youTubePlayerView.initialize(new YouTubePlayerInitListener() {
             @Override
             public void onInitSuccess(final YouTubePlayer initializedYouTubePlayer) {
                 initializedYouTubePlayer.addListener(new AbstractYouTubePlayerListener() {
                     @Override
                     public void onReady() {
-                        String videoId = "6JYIGclVQdw";
+                        Uri uri = Uri.parse(getIntent().getExtras().getString("link"));
+                        String videoId = uri.getQueryParameter("v");;
                         initializedYouTubePlayer.loadVideo(videoId, 0);
+                        initializedYouTubePlayer.play();
                     }
                 });
             }
