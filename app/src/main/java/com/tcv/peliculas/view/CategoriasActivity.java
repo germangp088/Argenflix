@@ -23,6 +23,7 @@ import com.tcv.peliculas.api.ApiClient;
 import com.tcv.peliculas.controller.Categorias.CategoriasListAdapter;
 import com.tcv.peliculas.controller.Categorias.CategoriasViewModel;
 import com.tcv.peliculas.model.Categoria;
+import com.tcv.peliculas.model.Pelicula;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,21 +65,7 @@ public class CategoriasActivity extends AppCompatActivity
         categoriasAdapter = new CategoriasListAdapter(categorias, this);
         categoriasRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         categoriasRv.setAdapter(categoriasAdapter);
-        ApiClient.getClient(this).getCategorias().enqueue(new Callback<List<Categoria>>() {
-            @Override
-            public void onResponse(Call<List<Categoria>> call, Response<List<Categoria>> response) {
-                categorias.clear();
-                List<Categoria> categoriasResponse = response.body();
-                categorias.addAll(categoriasResponse);
-                categoriasAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(Call<List<Categoria>> call, Throwable throwable) {
-                Toast.makeText(CategoriasActivity.this, "Ocurrio un error al querer obtener la lista de peliculas.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        obtenerCategorias();
     }
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -117,14 +104,60 @@ public class CategoriasActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String titulo) {
-                //search(titulo);
+                search(titulo);
                 return true;
             }
         });
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void search(String titulo){
+    private void search(final String titulo){
+        if (!titulo.equals("")){
+            ApiClient.getClient(this).getCategorias().enqueue(new Callback<List<Categoria>>() {
+                @Override
+                public void onResponse(Call<List<Categoria>> call, Response<List<Categoria>> response) {
+                    categorias.clear();
+                    List<Categoria> categoriasResponse = response.body();
+                    List<Categoria> categoriasToRemove = new ArrayList<>();
+                    List<Pelicula> peliculasToRemove = new ArrayList<>();
+                    try{
+                        for (Categoria categoria : categoriasResponse) {
+                            int peliculasCount = 0;
+                            for (Pelicula pelicula : categoria.getPeliculas()) {
+                                if(!pelicula.getTitulo().toLowerCase().contains(titulo.toLowerCase())){
+                                    peliculasCount++;
+                                    peliculasToRemove.add(pelicula);
+                                }
+                            }
+                            if(peliculasCount == categoria.getPeliculas().size()){
+                                categoriasToRemove.add(categoria);
+                            }
+                        }
+
+                        for (Categoria categoria : categoriasToRemove) {
+                            categoriasResponse.remove(categoria);
+                        }
+                    }
+                    catch (Exception e){
+                        Toast.makeText(CategoriasActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    categorias.addAll(categoriasResponse);
+                    categoriasAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onFailure(Call<List<Categoria>> call, Throwable throwable) {
+                    Toast.makeText(CategoriasActivity.this, "Ocurrio un error al querer obtener la lista de peliculas.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        else {
+            obtenerCategorias();
+        }
+    }
+
+    private void obtenerCategorias(){
         ApiClient.getClient(this).getCategorias().enqueue(new Callback<List<Categoria>>() {
             @Override
             public void onResponse(Call<List<Categoria>> call, Response<List<Categoria>> response) {
@@ -132,8 +165,6 @@ public class CategoriasActivity extends AppCompatActivity
                 List<Categoria> categoriasResponse = response.body();
                 categorias.addAll(categoriasResponse);
                 categoriasAdapter.notifyDataSetChanged();
-                Toast.makeText(CategoriasActivity.this, "Ocurrio un error al querer obtener la lista de peliculas.", Toast.LENGTH_SHORT).show();
-
             }
 
             @Override
