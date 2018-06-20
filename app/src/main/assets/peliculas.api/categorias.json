@@ -5,7 +5,7 @@
     "peliculas" :
     [
       {
-        "id" : "2",
+        "id" : "1",
         "titulo" : "Star Wars El Ultimo Jedi",
         "genero" : "Ciencia Ficcion",
         "imagen" : "2131165318",
@@ -47,7 +47,7 @@
         "Anthony Daniels"],
       "video_url" : "https://www.youtube.com/watch?v=Q0CbN8sfihY"
     },{
-      "id" : "2",
+      "id" : "3",
       "titulo" : "Star Wars El Decimonoveno Jedi",
       "genero" : "Ciencia Ficcion",
       "imagen" : "2131165318",
@@ -68,7 +68,7 @@
         "Anthony Daniels"],
       "video_url" : "https://www.youtube.com/watch?v=Q0CbN8sfihY"
     },{
-      "id" : "2",
+      "id" : "4",
       "titulo" : "Los Cazafantasmas",
       "genero" : "Ciencia Ficcion",
       "imagen" : "2131165318",
@@ -97,7 +97,7 @@
     "peliculas" :
     [
       {
-        "id": "1",
+        "id": "5",
         "titulo": "Batman El Caballero De La Noche",
         "genero": "Accion",
         "imagen": "2131165277",
@@ -114,7 +114,7 @@
           "Morgan Freeman"],
         "video_url" : "https://www.youtube.com/watch?v=EXeTwQWrcwY&t=82s"
       },{
-      "id": "1",
+      "id": "6",
       "titulo": "Rompiendo Cosas",
       "genero": "Accion",
       "imagen": "2131165277",
@@ -139,7 +139,7 @@
     "peliculas" :
     [
       {
-        "id" : "3",
+        "id" : "7",
         "titulo" : "Pantera Negra",
         "genero" : "Aventura",
         "imagen" : "2131165278",

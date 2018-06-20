@@ -9,19 +9,14 @@
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
             android:title="Favoritos" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="La otra cosa" />
-
     </group>
 
     <item android:title="Sesion">
         <menu>
             <item
                 android:id="@+id/cerrar_sesion"
-                android:title="@string/cerrar_sesion"
-                app:showAsAction="never"/>
+                android:icon="@drawable/power"
+                android:title="Cerrar Sesion"/>
         </menu>
     </item>
 
