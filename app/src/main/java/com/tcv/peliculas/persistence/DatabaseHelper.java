@@ -28,7 +28,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void initialize(SQLiteDatabase db) {
-
+        boolean closeDb = false;
+        if(db == null) {
+            db = this.getWritableDatabase();
+            closeDb = true;
+        }
+        db.delete(Favorito.TABLE_NAME, null, null);
+        if(closeDb)
+            db.close();
     }
 
     @Override
@@ -74,22 +81,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         //2º
-
-        Cursor cursor = db.rawQuery("SELECT COUNT(" + Favorito.COLUMN_ID + ") AS fav FROM " + Favorito.TABLE_NAME + " WHERE " +
-                Favorito.COLUMN_PELICULA + "=?;",
+        Cursor cursor = db.rawQuery("SELECT COUNT(" + Favorito.COLUMN_PELICULA + ") AS fav FROM "
+                + Favorito.TABLE_NAME + " WHERE " + Favorito.COLUMN_PELICULA + "=?;",
                 new String[]{String.valueOf(idPelicula)});
 
         //3º
-        int result = 0;
-        if (cursor != null) {
+        boolean result = false;
+        if (cursor.getCount() > 0) {
             cursor.moveToFirst();
-            result = cursor.getColumnIndex("fav");
+            result = (cursor.getInt(cursor.getColumnIndex("fav")) > 0);
+            // close the db connection
+            cursor.close();
+            db.close();
         }
 
         // close the db connection
         cursor.close();
         db.close();
-        return (result > 0);
+        return result;
     }
 
     public List<Favorito> getAllFavoritos() {
@@ -102,7 +111,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //3º
         List<Favorito> favoritos = new ArrayList<>();
-        if (cursor != null) {
+        if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             do {
                 favoritos.add(new Favorito(
