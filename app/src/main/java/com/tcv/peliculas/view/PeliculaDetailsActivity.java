@@ -17,6 +17,9 @@ import com.google.gson.Gson;
 import com.tcv.peliculas.R;
 import com.tcv.peliculas.model.Pelicula;
 import com.tcv.peliculas.persistence.DatabaseHelper;
+import com.tcv.peliculas.persistence.Favorito;
+
+import java.util.List;
 
 public class PeliculaDetailsActivity extends AppCompatActivity {
 
@@ -35,6 +38,8 @@ public class PeliculaDetailsActivity extends AppCompatActivity {
 
         Bundle args = getIntent().getExtras();
         pelicula = new Gson().fromJson(args.getString("pelicula"), Pelicula.class);
+
+        List<Favorito> laoputaiashjdfhioasdfsdfko = dbHelper.getAllFavoritos();
 
         favorite = dbHelper.getIfIsFavorito(pelicula.getId());
 
