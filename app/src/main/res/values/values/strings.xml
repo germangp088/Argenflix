@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">Pizzeria</string>
-    <string name="navigation_drawer_open" />
-    <string name="navigation_drawer_close" />
-    <string name="cart">Cart</string>
-</resources>
