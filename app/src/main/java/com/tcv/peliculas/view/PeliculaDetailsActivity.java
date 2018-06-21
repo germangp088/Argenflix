@@ -39,8 +39,6 @@ public class PeliculaDetailsActivity extends AppCompatActivity {
         Bundle args = getIntent().getExtras();
         pelicula = new Gson().fromJson(args.getString("pelicula"), Pelicula.class);
 
-        List<Favorito> laoputaiashjdfhioasdfsdfko = dbHelper.getAllFavoritos();
-
         favorite = dbHelper.getIfIsFavorito(pelicula.getId());
 
         TextView titulo = (TextView) findViewById(R.id.titulo);
@@ -100,7 +98,7 @@ public class PeliculaDetailsActivity extends AppCompatActivity {
                     favorite = false;
                 }
                 else{
-                    dbHelper.insertarFavorito(pelicula.getId(), null);
+                    dbHelper.insertarFavorito(pelicula, null);
                     item.setIcon(R.drawable.favcheck);
                     favorite = true;
                 }

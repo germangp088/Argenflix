@@ -24,6 +24,7 @@
         </activity>
         <activity android:name=".view.PeliculaDetailsActivity"/>
         <activity android:name=".view.VerPeliculaActivity"/>
+        <activity android:name=".view.FavoritesActivity"/>
     </application>
 
 </manifest>

@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "argenflix_db";
 
     public DatabaseHelper(Context context) {
@@ -40,11 +40,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        boolean closeDb = false;
+        if(db == null) {
+            db = this.getWritableDatabase();
+            closeDb = true;
+        }
+        db.execSQL("DROP TABLE IF EXISTS " + Favorito.TABLE_NAME + ";");
+        db.execSQL(Favorito.CREATE_TABLE);
+        if(closeDb)
+            db.close();
     }
 
-    public void insertarFavorito(int peliculaId, SQLiteDatabase db) {
+    public void insertarFavorito(Pelicula pelicula, SQLiteDatabase db) {
         ContentValues values = new ContentValues();
-        values.put(Favorito.COLUMN_PELICULA, peliculaId);
+        values.put(Favorito.COLUMN_PELICULA_ID, pelicula.getId());
+        values.put(Favorito.COLUMN_PELICULA_TITULO, pelicula.getTitulo());
+        values.put(Favorito.COLUMN_PELICULA_IMAGEN, pelicula.getImagenMini());
         insertContent(values, db);
     }
 
@@ -71,7 +82,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db = this.getWritableDatabase();
             closeDb = true;
         }
-        db.delete(Favorito.TABLE_NAME, Favorito.COLUMN_PELICULA + "=?", whereArgs);
+        db.delete(Favorito.TABLE_NAME, Favorito.COLUMN_PELICULA_ID + "=?", whereArgs);
         if(closeDb)
             db.close();
     }
@@ -81,8 +92,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         //2º
-        Cursor cursor = db.rawQuery("SELECT COUNT(" + Favorito.COLUMN_PELICULA + ") AS fav FROM "
-                + Favorito.TABLE_NAME + " WHERE " + Favorito.COLUMN_PELICULA + "=?;",
+        Cursor cursor = db.rawQuery("SELECT COUNT(" + Favorito.COLUMN_PELICULA_ID + ") AS fav FROM "
+                + Favorito.TABLE_NAME + " WHERE " + Favorito.COLUMN_PELICULA_ID + "=?;",
                 new String[]{String.valueOf(idPelicula)});
 
         //3º
@@ -90,9 +101,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             result = (cursor.getInt(cursor.getColumnIndex("fav")) > 0);
-            // close the db connection
-            cursor.close();
-            db.close();
         }
 
         // close the db connection
@@ -116,7 +124,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do {
                 favoritos.add(new Favorito(
                         cursor.getInt(cursor.getColumnIndex(Favorito.COLUMN_ID)),
-                        cursor.getInt(cursor.getColumnIndex(Favorito.COLUMN_PELICULA))));
+                        cursor.getInt(cursor.getColumnIndex(Favorito.COLUMN_PELICULA_ID)),
+                        cursor.getString(cursor.getColumnIndex(Favorito.COLUMN_PELICULA_TITULO)),
+                        cursor.getString(cursor.getColumnIndex(Favorito.COLUMN_PELICULA_TITULO))));
             } while (cursor.moveToNext());
 
             // close the db connection
