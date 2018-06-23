@@ -55,6 +55,7 @@ public class BuscadorActivity extends AppCompatActivity{
         MenuItem mSearch = menu.findItem(R.id.action_search);
 
         SearchView mSearchView = (SearchView) mSearch.getActionView();
+        //Seteo placeholder.
         mSearchView.setQueryHint("Buscar titulo...");
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -80,8 +81,10 @@ public class BuscadorActivity extends AppCompatActivity{
                 public void onResponse(Call<List<Pelicula>> call, Response<List<Pelicula>> response) {
                     peliculas.clear();
                     List<Pelicula> peliculasResponse = response.body();
+                    //Armo array para peliculas encontradas.
                     List<Pelicula> peliculasFind = new ArrayList<Pelicula>();
                     for (Pelicula pelicula : peliculasResponse) {
+                        //Si contiene el titulo lo buscado.
                         if(pelicula.getTitulo().toLowerCase().contains(titulo.toLowerCase())){
                             peliculasFind.add(pelicula);
                         }

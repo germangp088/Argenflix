@@ -39,6 +39,7 @@ public class PeliculaDetailsActivity extends AppCompatActivity {
         Bundle args = getIntent().getExtras();
         pelicula = new Gson().fromJson(args.getString("pelicula"), Pelicula.class);
 
+        //Ejecuta sentencia para saber si esta agregado a favoritos.
         favorite = dbHelper.getIfIsFavorito(pelicula.getId());
 
         TextView titulo = (TextView) findViewById(R.id.titulo);
@@ -76,11 +77,13 @@ public class PeliculaDetailsActivity extends AppCompatActivity {
     }
 
     @Override
+    //Levanta el menu con el icono de favoritos par aagregar o quitar.
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_details, menu);
 
         MenuItem mFav = menu.findItem(R.id.action_fav);
 
+        //Si esta en favoritos pone una estrella pintada, sino una sin pintar.
         if(favorite) {
             mFav.setIcon(R.drawable.favcheck);
         }
@@ -94,13 +97,11 @@ public class PeliculaDetailsActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 if(favorite) {
                     dbHelper.deleteFavorito(pelicula.getId(), null);
-                    item.setIcon(R.drawable.fav);
-                    favorite = false;
+                    cambiarEstado(item, false, R.drawable.fav);
                 }
                 else{
                     dbHelper.insertarFavorito(pelicula, null);
-                    item.setIcon(R.drawable.favcheck);
-                    favorite = true;
+                    cambiarEstado(item, true, R.drawable.favcheck);
                 }
                 return true;
             }
@@ -109,4 +110,9 @@ public class PeliculaDetailsActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    //Cambia el estado de favorito y el icono.
+    private void cambiarEstado(MenuItem item,boolean isfavorite, int icono){
+        item.setIcon(icono);
+        favorite = isfavorite;
+    }
 }

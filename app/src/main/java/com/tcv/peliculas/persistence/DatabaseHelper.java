@@ -3,22 +3,27 @@ package com.tcv.peliculas.persistence;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.tcv.peliculas.R;
 import com.tcv.peliculas.model.Pelicula;
+import com.tcv.peliculas.view.LoginActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "argenflix_db";
+    private static String usuario;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        usuario = getUsuario(context);
     }
 
     @Override
@@ -53,15 +58,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void insertarFavorito(Pelicula pelicula, SQLiteDatabase db) {
         ContentValues values = new ContentValues();
+        //Columna donde va el dato y el valor.
         values.put(Favorito.COLUMN_PELICULA_ID, pelicula.getId());
+        values.put(Favorito.COLUMN_USUARIO, usuario);
         values.put(Favorito.COLUMN_PELICULA_TITULO, pelicula.getTitulo());
         values.put(Favorito.COLUMN_PELICULA_IMAGEN, pelicula.getImagenMini());
         insertContent(values, db);
     }
 
     public void deleteFavorito(int peliculaId, SQLiteDatabase db) {
-        ContentValues values = new ContentValues();
-        String[] whereArgs = new String[] { String.valueOf(peliculaId) };
+        String[] whereArgs = new String[] { String.valueOf(peliculaId), usuario };
         deleteContent(whereArgs, db);
     }
 
@@ -82,7 +88,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db = this.getWritableDatabase();
             closeDb = true;
         }
-        db.delete(Favorito.TABLE_NAME, Favorito.COLUMN_PELICULA_ID + "=?", whereArgs);
+        db.delete(Favorito.TABLE_NAME, Favorito.COLUMN_PELICULA_ID + "=? AND " + Favorito.COLUMN_USUARIO + "=?"   , whereArgs);
         if(closeDb)
             db.close();
     }
@@ -93,8 +99,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //2º
         Cursor cursor = db.rawQuery("SELECT COUNT(" + Favorito.COLUMN_PELICULA_ID + ") AS fav FROM "
-                + Favorito.TABLE_NAME + " WHERE " + Favorito.COLUMN_PELICULA_ID + "=?;",
-                new String[]{String.valueOf(idPelicula)});
+                + Favorito.TABLE_NAME + " WHERE " + Favorito.COLUMN_PELICULA_ID + "=? AND " + Favorito.COLUMN_USUARIO + "=?;",
+                new String[]{String.valueOf(idPelicula), usuario});
 
         //3º
         boolean result = false;
@@ -115,7 +121,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //2º
         Cursor cursor = db.rawQuery("SELECT * FROM " +
-                Favorito.TABLE_NAME, null);
+                Favorito.TABLE_NAME + " WHERE " + Favorito.COLUMN_USUARIO + "=?;",
+                new String[]{usuario});
 
         //3º
         List<Favorito> favoritos = new ArrayList<>();
@@ -125,8 +132,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 favoritos.add(new Favorito(
                         cursor.getInt(cursor.getColumnIndex(Favorito.COLUMN_ID)),
                         cursor.getInt(cursor.getColumnIndex(Favorito.COLUMN_PELICULA_ID)),
+                        cursor.getString(cursor.getColumnIndex(Favorito.COLUMN_USUARIO)),
                         cursor.getString(cursor.getColumnIndex(Favorito.COLUMN_PELICULA_TITULO)),
-                        cursor.getString(cursor.getColumnIndex(Favorito.COLUMN_PELICULA_TITULO))));
+                        cursor.getString(cursor.getColumnIndex(Favorito.COLUMN_PELICULA_IMAGEN))));
             } while (cursor.moveToNext());
 
             // close the db connection
@@ -134,5 +142,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.close();
         }
         return favoritos;
+    }
+
+    public String getUsuario(Context context){
+        SharedPreferences sharedPreferences =
+                context.getSharedPreferences(
+                        context.getString(R.string.app_name),Context.MODE_PRIVATE);
+        return sharedPreferences.getString("usuario","usuario");
     }
 }
