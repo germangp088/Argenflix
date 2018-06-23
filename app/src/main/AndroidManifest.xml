@@ -25,6 +25,7 @@
         <activity android:name=".view.PeliculaDetailsActivity"/>
         <activity android:name=".view.VerPeliculaActivity"/>
         <activity android:name=".view.FavoritesActivity"/>
+        <activity android:name=".view.BuscadorActivity"/>
     </application>
 
 </manifest>
