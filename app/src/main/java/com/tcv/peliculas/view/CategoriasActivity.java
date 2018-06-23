@@ -93,7 +93,6 @@ public class CategoriasActivity extends AppCompatActivity
         MenuItem mSearch = menu.findItem(R.id.action_search);
 
         SearchView mSearchView = (SearchView) mSearch.getActionView();
-        mSearchView.setQueryHint("Search");
 
         mSearch.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 

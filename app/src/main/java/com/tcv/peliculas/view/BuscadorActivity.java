@@ -1,12 +1,7 @@
 package com.tcv.peliculas.view;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,15 +9,12 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tcv.peliculas.R;
 import com.tcv.peliculas.api.ApiClient;
+import com.tcv.peliculas.controller.Buscador.BuscadorListAdapter;
+import com.tcv.peliculas.controller.Buscador.BuscadorViewModel;
 import com.tcv.peliculas.model.Pelicula;
 
 import java.util.ArrayList;
@@ -33,9 +25,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class BuscadorActivity extends AppCompatActivity{
-    ArrayAdapter<String> mAdapter;
-    ListView mListView;
-    TextView mEmptyView;
+    RecyclerView buscador_rv;
+    private BuscadorListAdapter buscadorListAdapter;
+    private List<Pelicula> peliculas;
+    private BuscadorViewModel buscadorViewModel = new BuscadorViewModel(this);
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,17 +37,14 @@ public class BuscadorActivity extends AppCompatActivity{
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mListView = (ListView) findViewById(R.id.list);
-        mEmptyView = (TextView) findViewById(R.id.emptyView);
+        //Agarrar el recyclerview de categorias
+        peliculas = new ArrayList<>();
+        buscador_rv = (RecyclerView) findViewById(R.id.buscador_rv);
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(BuscadorActivity.this, adapterView.getItemAtPosition(i).toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        mListView.setEmptyView(mEmptyView);
+        //Asociar un adapter de Buscador a ese recyclerview
+        buscadorListAdapter = new BuscadorListAdapter(peliculas, this);
+        buscador_rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        buscador_rv.setAdapter(buscadorListAdapter);
     }
 
     @Override
@@ -64,7 +54,7 @@ public class BuscadorActivity extends AppCompatActivity{
         MenuItem mSearch = menu.findItem(R.id.action_search);
 
         SearchView mSearchView = (SearchView) mSearch.getActionView();
-        mSearchView.setQueryHint("Search");
+        mSearchView.setQueryHint("Buscar titulo...");
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -87,18 +77,15 @@ public class BuscadorActivity extends AppCompatActivity{
             ApiClient.getClient(this).getPeliculas().enqueue(new Callback<List<Pelicula>>() {
                 @Override
                 public void onResponse(Call<List<Pelicula>> call, Response<List<Pelicula>> response) {
+                    peliculas.clear();
                     List<Pelicula> peliculasResponse = response.body();
-                    ArrayList<String> peliculasFind = new ArrayList<String>();
+                    List<Pelicula> peliculasFind = new ArrayList<Pelicula>();
                     for (Pelicula pelicula : peliculasResponse) {
                         if(pelicula.getTitulo().toLowerCase().contains(titulo.toLowerCase())){
-                            peliculasFind.add(pelicula.getTitulo());
+                            peliculasFind.add(pelicula);
                         }
                     }
-                    mAdapter = new ArrayAdapter<String>(BuscadorActivity.this,
-                            android.R.layout.simple_list_item_1,
-                            peliculasFind);
-                    mListView.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
+                    peliculas.addAll(peliculasFind);
                 }
 
                 @Override
@@ -107,11 +94,8 @@ public class BuscadorActivity extends AppCompatActivity{
                 }
             });
         }else{
-            mAdapter = new ArrayAdapter<String>(BuscadorActivity.this,
-                    android.R.layout.simple_list_item_1,
-                    new ArrayList<String>());
-            mListView.setAdapter(mAdapter);
-            mAdapter.notifyDataSetChanged();
+            peliculas.clear();
         }
+        buscadorListAdapter.notifyDataSetChanged();
     }
 }
