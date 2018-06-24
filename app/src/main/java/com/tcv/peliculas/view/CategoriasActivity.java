@@ -153,13 +153,9 @@ public class CategoriasActivity extends AppCompatActivity
             });
         }
         else{
-            //Uri.Builder uri = new Uri.Builder();
-            //uri.appendPath(imagen);
-            //avatar.setImageURI(uri.build());
             File imgFile = new  File(imagen);
             if(imgFile.exists()){
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                //Drawable d = new BitmapDrawable(getResources(), myBitmap);
                 avatar.setImageBitmap(myBitmap);
             }
         }
@@ -209,10 +205,8 @@ public class CategoriasActivity extends AppCompatActivity
         switch (requestCode) {
             case CAMERA:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission Granted
                     takePhotoFromCamera();
                 } else {
-                    // Permission Denied
                     Toast.makeText(CategoriasActivity.this, "Acceso denegado a la camara.", Toast.LENGTH_SHORT)
                             .show();
                 }
