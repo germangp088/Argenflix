@@ -1,10 +1,12 @@
 package com.tcv.peliculas.view;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -12,6 +14,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -161,7 +165,12 @@ public class CategoriasActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case CAMERA:
-                                takePhotoFromCamera();
+                                int hasWriteContactsPermission = checkSelfPermission(Manifest.permission.CAMERA);
+                                if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED) {
+                                    requestPermissions(new String[] {Manifest.permission.CAMERA},
+                                            CAMERA);
+                                    break;
+                                }
                                 break;
                             case GALLERY:
                                 choosePhotoFromGallary();
@@ -170,6 +179,24 @@ public class CategoriasActivity extends AppCompatActivity
                     }
                 });
         pictureDialog.show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case CAMERA:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+                    takePhotoFromCamera();
+                } else {
+                    // Permission Denied
+                    Toast.makeText(CategoriasActivity.this, "Acceso denegado a la camara.", Toast.LENGTH_SHORT)
+                            .show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     public void choosePhotoFromGallary() {
