@@ -332,7 +332,7 @@ public class CategoriasActivity extends AppCompatActivity
         SharedPreferences sharedPreferences =
             getSharedPreferences(getString(R.string.app_name),
                     Context.MODE_PRIVATE);
-        sharedPreferences.edit().clear().commit();
+        sharedPreferences.edit().remove("usuario").commit();
 
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
