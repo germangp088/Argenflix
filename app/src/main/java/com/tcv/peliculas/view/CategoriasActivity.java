@@ -9,13 +9,13 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -37,7 +37,12 @@ import com.tcv.peliculas.controller.Categorias.CategoriasListAdapter;
 import com.tcv.peliculas.controller.Categorias.CategoriasViewModel;
 import com.tcv.peliculas.model.Categoria;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import retrofit2.Call;
@@ -46,6 +51,7 @@ import retrofit2.Response;
 
 public class CategoriasActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
+    private static final String IMAGE_DIRECTORY = "/argenflix";
     private static final int CAMERA = 0;
     private static final int GALLERY = 1;
     private RecyclerView categoriasRv;
@@ -166,10 +172,18 @@ public class CategoriasActivity extends AppCompatActivity
                         switch (which) {
                             case CAMERA:
                                 int hasWriteContactsPermission = checkSelfPermission(Manifest.permission.CAMERA);
-                                if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED) {
-                                    requestPermissions(new String[] {Manifest.permission.CAMERA},
+                                int hasWrite2 = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+                                int hasWrite3 = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+                                if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED ||
+                                        hasWrite2 != PackageManager.PERMISSION_GRANTED ||
+                                        hasWrite3 != PackageManager.PERMISSION_GRANTED) {
+                                    requestPermissions(new String[] {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
+                                                    Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                             CAMERA);
                                     break;
+                                }
+                                else {
+                                    takePhotoFromCamera();
                                 }
                                 break;
                             case GALLERY:
@@ -214,26 +228,25 @@ public class CategoriasActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         ImageView imageView = findViewById(R.id.avatar);
+        String path="";
         switch(requestCode) {
             case CAMERA:
                 if(resultCode == RESULT_OK){
-                    //Uri selectedImage = imageReturnedIntent.getData();
-                    //imageView.setImageURI(selectedImage);
                     Bitmap photo = (Bitmap) imageReturnedIntent.getExtras().get("data");
                     imageView.setImageBitmap(photo);
+                    path = saveImage(photo);
                 }
 
                 break;
             case GALLERY:
                 if(resultCode == RESULT_OK){
-                    Uri selectedImage = imageReturnedIntent.getData();
-                    imageView.setImageURI(selectedImage);
                     Uri selectedImageUri = imageReturnedIntent.getData();
-                    String selectedImagePath=getPath(selectedImageUri);
+                    path=getPath(selectedImageUri);
                     imageView.setImageURI(selectedImageUri);
                 }
                 break;
         }
+        persistirAvatar(path);
     }
 
     private String getPath(Uri uri)
@@ -243,6 +256,45 @@ public class CategoriasActivity extends AppCompatActivity
         int column_index=cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
         cursor.moveToFirst();
         return cursor.getString(column_index);
+    }
+
+
+    public String saveImage(Bitmap myBitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        File wallpaperDirectory = new File(
+                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
+        // have the object build the directory structure, if needed.
+        if (!wallpaperDirectory.exists()) {
+            wallpaperDirectory.mkdirs();
+        }
+
+        try {
+            File f = new File(wallpaperDirectory, Calendar.getInstance()
+                    .getTimeInMillis() + ".jpg");
+            f.createNewFile();
+            FileOutputStream fo = new FileOutputStream(f);
+            fo.write(bytes.toByteArray());
+            MediaScannerConnection.scanFile(this,
+                    new String[]{f.getPath()},
+                    new String[]{"image/jpeg"}, null);
+            fo.close();
+
+            return f.getAbsolutePath();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        return "";
+    }
+
+    private void persistirAvatar(String path)
+    {
+        SharedPreferences sharedPreferences =
+                CategoriasActivity.this.getSharedPreferences(getString(R.string.app_name),
+                        Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("avatar",path);
+        editor.commit();
     }
 
     private void obtenerCategorias(){
