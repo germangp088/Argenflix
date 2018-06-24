@@ -152,7 +152,9 @@ public class CategoriasActivity extends AppCompatActivity
             });
         }
         else{
-            avatar.setImageResource(Integer.parseInt(imagen));
+            Uri.Builder uri = new Uri.Builder();
+            uri.appendPath(imagen);
+            avatar.setImageURI(uri.build());
         }
 
         TextView user = (TextView)findViewById(R.id.usuario);
@@ -171,12 +173,12 @@ public class CategoriasActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case CAMERA:
-                                int hasWriteContactsPermission = checkSelfPermission(Manifest.permission.CAMERA);
-                                int hasWrite2 = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
-                                int hasWrite3 = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
-                                if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED ||
-                                        hasWrite2 != PackageManager.PERMISSION_GRANTED ||
-                                        hasWrite3 != PackageManager.PERMISSION_GRANTED) {
+                                int cameraP = checkSelfPermission(Manifest.permission.CAMERA);
+                                int readP = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+                                int writeP = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                                if (cameraP != PackageManager.PERMISSION_GRANTED ||
+                                        readP != PackageManager.PERMISSION_GRANTED ||
+                                        writeP != PackageManager.PERMISSION_GRANTED) {
                                     requestPermissions(new String[] {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
                                                     Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                             CAMERA);
@@ -292,8 +294,10 @@ public class CategoriasActivity extends AppCompatActivity
         SharedPreferences sharedPreferences =
                 CategoriasActivity.this.getSharedPreferences(getString(R.string.app_name),
                         Context.MODE_PRIVATE);
+        String usuario = sharedPreferences.getString("usuario","");
+
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("avatar",path);
+        editor.putString("profile_picture_" + usuario ,path);
         editor.commit();
     }
 
