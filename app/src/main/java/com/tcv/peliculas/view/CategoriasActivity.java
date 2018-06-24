@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -152,9 +153,15 @@ public class CategoriasActivity extends AppCompatActivity
             });
         }
         else{
-            Uri.Builder uri = new Uri.Builder();
-            uri.appendPath(imagen);
-            avatar.setImageURI(uri.build());
+            //Uri.Builder uri = new Uri.Builder();
+            //uri.appendPath(imagen);
+            //avatar.setImageURI(uri.build());
+            File imgFile = new  File(imagen);
+            if(imgFile.exists()){
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                //Drawable d = new BitmapDrawable(getResources(), myBitmap);
+                avatar.setImageBitmap(myBitmap);
+            }
         }
 
         TextView user = (TextView)findViewById(R.id.usuario);
