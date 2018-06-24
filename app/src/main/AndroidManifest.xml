@@ -26,6 +26,11 @@
         <activity android:name=".view.VerPeliculaActivity"/>
         <activity android:name=".view.FavoritesActivity"/>
         <activity android:name=".view.BuscadorActivity"/>
-    </application>
 
+    </application>
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission-sdk-23 android:name="android.permission.CAMERA" />
+    <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 </manifest>

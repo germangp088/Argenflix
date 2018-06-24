@@ -1,9 +1,15 @@
 package com.tcv.peliculas.view;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,17 +22,16 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.tcv.peliculas.R;
 import com.tcv.peliculas.api.ApiClient;
 import com.tcv.peliculas.controller.Categorias.CategoriasListAdapter;
 import com.tcv.peliculas.controller.Categorias.CategoriasViewModel;
 import com.tcv.peliculas.model.Categoria;
-import com.tcv.peliculas.model.Pelicula;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +42,8 @@ import retrofit2.Response;
 
 public class CategoriasActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
+    private static final int CAMERA = 0;
+    private static final int GALLERY = 1;
     private RecyclerView categoriasRv;
     private CategoriasListAdapter categoriasAdapter;
     private List<Categoria> categorias;
@@ -127,6 +134,12 @@ public class CategoriasActivity extends AppCompatActivity
         if(String.valueOf(imagen).isEmpty())
         {
             avatar.setImageResource(R.drawable.avatar);
+            avatar.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v)
+                {
+                    showPictureDialog();
+                }
+            });
         }
         else{
             avatar.setImageResource(Integer.parseInt(imagen));
@@ -134,6 +147,75 @@ public class CategoriasActivity extends AppCompatActivity
 
         TextView user = (TextView)findViewById(R.id.usuario);
         user.setText(usuario);
+    }
+
+    private void showPictureDialog(){
+        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
+        pictureDialog.setTitle("Obtener imagen");
+        String[] pictureDialogItems = {
+                "Camara",
+                "Galeria" };
+        pictureDialog.setItems(pictureDialogItems,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case CAMERA:
+                                takePhotoFromCamera();
+                                break;
+                            case GALLERY:
+                                choosePhotoFromGallary();
+                                break;
+                        }
+                    }
+                });
+        pictureDialog.show();
+    }
+
+    public void choosePhotoFromGallary() {
+        Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(pickPhoto , GALLERY);
+    }
+
+    private void takePhotoFromCamera() {
+        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(takePicture, CAMERA);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        ImageView imageView = findViewById(R.id.avatar);
+        switch(requestCode) {
+            case CAMERA:
+                if(resultCode == RESULT_OK){
+                    //Uri selectedImage = imageReturnedIntent.getData();
+                    //imageView.setImageURI(selectedImage);
+                    Bitmap photo = (Bitmap) imageReturnedIntent.getExtras().get("data");
+                    imageView.setImageBitmap(photo);
+                }
+
+                break;
+            case GALLERY:
+                if(resultCode == RESULT_OK){
+                    Uri selectedImage = imageReturnedIntent.getData();
+                    imageView.setImageURI(selectedImage);
+                    Uri selectedImageUri = imageReturnedIntent.getData();
+                    String selectedImagePath=getPath(selectedImageUri);
+                    imageView.setImageURI(selectedImageUri);
+                }
+                break;
+        }
+    }
+
+    private String getPath(Uri uri)
+    {
+        String[] projection={MediaStore.Images.Media.DATA};
+        Cursor cursor=managedQuery(uri,projection,null,null,null);
+        int column_index=cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
     }
 
     private void obtenerCategorias(){
