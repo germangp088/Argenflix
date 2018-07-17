@@ -1,4 +1,5 @@
 package com.tcv.peliculas.view;
+//package com.radefffactory.location;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -10,6 +11,10 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +22,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -45,6 +52,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -58,6 +66,9 @@ public class CategoriasActivity extends AppCompatActivity
     private RecyclerView categoriasRv;
     private CategoriasListAdapter categoriasAdapter;
     private List<Categoria> categorias;
+
+    private static final int MY_PERMISSION_REQUEST_LOCATION = 1;
+
 
     private CategoriasViewModel categoriasViewModel = new CategoriasViewModel(this);
     @Override
@@ -162,6 +173,34 @@ public class CategoriasActivity extends AppCompatActivity
 
         TextView user = (TextView)findViewById(R.id.usuario);
         user.setText(usuario);
+
+        TextView ciudad = (TextView) findViewById(R.id.ciudad);
+        if (ContextCompat.checkSelfPermission(CategoriasActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(CategoriasActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION))
+            {
+                ActivityCompat.requestPermissions (CategoriasActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_REQUEST_LOCATION);
+            }
+            else
+            {
+                ActivityCompat.requestPermissions (CategoriasActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_REQUEST_LOCATION);
+            }
+        }
+        else
+        {
+            LocationManager locationManager = (LocationManager) getSystemService (Context.LOCATION_SERVICE);
+            Location location = locationManager.getLastKnownLocation (LocationManager.NETWORK_PROVIDER);
+            try
+            {
+                ciudad.setText ("Ciudad: " + GetHereLocation(location.getLatitude(), location.getLongitude()));
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace ();
+                Toast.makeText (CategoriasActivity.this, "Not found!", Toast.LENGTH_SHORT).show();
+                ciudad.setText("Ciudad no encontrada");
+            }
+        }
     }
 
     private void showPictureDialog(){
@@ -209,6 +248,31 @@ public class CategoriasActivity extends AppCompatActivity
                 } else {
                     Toast.makeText(CategoriasActivity.this, "Acceso denegado a la camara.", Toast.LENGTH_SHORT)
                             .show();
+                }
+                break;
+            case MY_PERMISSION_REQUEST_LOCATION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    if (ContextCompat.checkSelfPermission(CategoriasActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                    {
+                        LocationManager locationManager = (LocationManager) getSystemService (Context.LOCATION_SERVICE);
+                        Location location = locationManager.getLastKnownLocation (LocationManager.NETWORK_PROVIDER);
+                        TextView ciudad = (TextView) findViewById(R.id.ciudad);
+                        try
+                        {
+                            ciudad.setText ("Ciudad: " + GetHereLocation(location.getLatitude(), location.getLongitude()));
+                        }
+                        catch (Exception e)
+                        {
+                            e.printStackTrace ();
+                            Toast.makeText (CategoriasActivity.this, "Not found!", Toast.LENGTH_SHORT).show();
+                            ciudad.setText ("Ciudad no encontrada");
+                        }
+                    }
+                }
+                else
+                {
+                    Toast.makeText (this, "No permission granted!", Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
@@ -341,4 +405,30 @@ public class CategoriasActivity extends AppCompatActivity
         startActivity(intent);
         finish();
     }
+
+    // get closest city name
+    private String GetHereLocation (double lat, double lon)
+    {
+        String curCity = "";
+        Geocoder geocoder = new Geocoder (CategoriasActivity.this, Locale.getDefault());
+        List<Address> addressList;
+        try
+        {
+            addressList = geocoder.getFromLocation (lat, lon, 1);
+            if (addressList.size() > 0)
+            {
+                curCity = addressList.get(0).getLocality();
+            }
+            else
+            {
+                curCity = "City not found!";
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return curCity;
+    }
 }
+
