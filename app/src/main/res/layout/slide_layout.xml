@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/slide_image"
+        android:layout_width="240dp"
+        android:layout_height="240dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        app:srcCompat="@drawable/argenflix_icon" />
+
+    <TextView
+        android:id="@+id/slide_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/slide_image"
+        android:layout_centerHorizontal="true"
+        android:text="BIENVENIDO"
+        android:layout_marginTop="40dp"
+        android:textSize="35dp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:textColor="@color/colorWhite"/>
+
+    <TextView
+        android:id="@+id/slide_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/slide_heading"
+        android:text="Disfre de la más amplia selección de peliculas online del mercado, contando con una amplia selección de categorías y títulos a su disposición"
+        android:layout_marginTop="40dp"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:textSize="18sp"
+        android:textAlignment="center"
+        android:textColor="@color/colorWhite"/>
+
+</RelativeLayout>

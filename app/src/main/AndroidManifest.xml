@@ -27,6 +27,9 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
         </activity>
+
+        <activity android:name=".view.OnboardingActivty"/>
+
         <activity android:name=".view.PeliculaDetailsActivity"/>
         <activity android:name=".view.VerPeliculaActivity"/>
         <activity android:name=".view.FavoritesActivity"/>
