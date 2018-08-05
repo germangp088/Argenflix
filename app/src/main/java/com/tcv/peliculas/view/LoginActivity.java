@@ -21,7 +21,7 @@ public class LoginActivity extends AppCompatActivity {
             if(credencialesExisten()) {
                 Intent intent =
                         new Intent(LoginActivity.this,
-                        CategoriasActivity.class);
+                        OnboardingActivty.class);
                 LoginActivity.this.startActivity(intent);
                 LoginActivity.this.finish();
             } else {

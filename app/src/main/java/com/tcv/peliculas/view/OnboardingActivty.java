@@ -52,8 +52,7 @@ public class OnboardingActivty extends AppCompatActivity {
             public void onClick(View v) {
                 if (mCurrentPage + 1 < mDots.length) {
                     mSlideViewPager.setCurrentItem(mCurrentPage + 1);
-                }
-                else {
+                } else {
                     Intent intent = new Intent(OnboardingActivty.this,
                             CategoriasActivity.class);
                     OnboardingActivty.this.startActivity(intent);
@@ -114,10 +113,7 @@ public class OnboardingActivty extends AppCompatActivity {
                 mBackButton.setVisibility(View.INVISIBLE);
                 mBackButton.setText("");
             } else if (position == mDots.length-1) {
-                mBackButton.setEnabled(true);
                 mBackButton.setText("Back");
-
-                mNextButton.setEnabled(false);
                 mNextButton.setText("Continuar");
             } else {
                 mBackButton.setEnabled(true);
