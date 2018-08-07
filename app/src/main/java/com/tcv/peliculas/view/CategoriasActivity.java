@@ -118,7 +118,7 @@ public class CategoriasActivity extends AppCompatActivity
         //Easy version.
         int scrollY = mScrollView.getScrollY();
         // Add parallax effect
-        imgContainer.setTranslationY(scrollY * 0.75f);
+        imgContainer.setTranslationY(scrollY * 1.3f);
 
 
     }
