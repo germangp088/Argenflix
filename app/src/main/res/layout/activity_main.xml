@@ -14,7 +14,7 @@
     <com.tcv.peliculas.view.ObservableScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
     <android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -30,8 +30,9 @@
 
                 <android.support.design.widget.AppBarLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:theme="@style/AppTheme.AppBarOverlay">
+                    android:layout_height="match_parent"
+                    android:theme="@style/AppTheme.AppBarOverlay"
+                    android:fitsSystemWindows="true">
 
                     <FrameLayout
                         android:id="@+id/img_container"
@@ -40,16 +41,16 @@
 
                         <ImageView
                             android:id="@+id/img"
-                            android:background="@drawable/batman"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="250dp"
+                            android:background="@drawable/black_panther"
                             android:scaleType="centerCrop" />
                     </FrameLayout>
 
                     <android.support.v7.widget.Toolbar
                         android:id="@+id/toolbar"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:background="?attr/colorPrimary"
                         android:minHeight="?attr/actionBarSize"
                         app:theme="@style/ThemeOverlay.AppCompat.Dark" />
