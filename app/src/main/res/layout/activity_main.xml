@@ -11,6 +11,10 @@
     tools:openDrawer="start">
 
 
+    <com.tcv.peliculas.view.ObservableScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -19,35 +23,48 @@
         android:layout_height="match_parent"
         tools:context="com.alan.navigation.MainActivity">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <android.support.design.widget.AppBarLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.AppBarOverlay">
-
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/colorPrimary"
-                    android:minHeight="?attr/actionBarSize"
-                    app:theme="@style/ThemeOverlay.AppCompat.Dark" />
-
-            </android.support.design.widget.AppBarLayout>
-
-            <android.support.v7.widget.RecyclerView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/categorias_rv"/>
+                android:orientation="vertical">
 
-        </LinearLayout>
+                <android.support.design.widget.AppBarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/AppTheme.AppBarOverlay">
 
+                    <FrameLayout
+                        android:id="@+id/img_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <ImageView
+                            android:id="@+id/img"
+                            android:background="@drawable/batman"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop" />
+                    </FrameLayout>
+
+                    <android.support.v7.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/colorPrimary"
+                        android:minHeight="?attr/actionBarSize"
+                        app:theme="@style/ThemeOverlay.AppCompat.Dark" />
+
+                </android.support.design.widget.AppBarLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/categorias_rv"/>
+
+            </LinearLayout>
     </android.support.design.widget.CoordinatorLayout>
 
+    </com.tcv.peliculas.view.ObservableScrollView>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
@@ -59,4 +76,5 @@
         app:menu="@menu/activity_main_drawer" />
 
 </android.support.v4.widget.DrawerLayout>
+
 

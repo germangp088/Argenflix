@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -32,6 +33,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,13 +63,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CategoriasActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener, ObservableScrollView.OnScrollChangedListener{
     private static final String IMAGE_DIRECTORY = "/argenflix";
     private static final int CAMERA = 0;
     private static final int GALLERY = 1;
     private RecyclerView categoriasRv;
     private CategoriasListAdapter categoriasAdapter;
     private List<Categoria> categorias;
+    private ObservableScrollView mScrollView;
+    private View imgContainer;
+    private ImageView mImageView;
 
     private static final int MY_PERMISSION_REQUEST_LOCATION = 1;
 
@@ -89,6 +96,11 @@ public class CategoriasActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        mScrollView = (ObservableScrollView)findViewById(R.id.scroll_view);
+        mScrollView.setOnScrollChangedListener(this);
+        imgContainer = findViewById(R.id.img_container);
+        mImageView =  findViewById(R.id.img);
+
         //Agarrar el recyclerview de categorias
         categorias = new ArrayList<>();
         categoriasRv = (RecyclerView) findViewById(R.id.categorias_rv);
@@ -98,6 +110,52 @@ public class CategoriasActivity extends AppCompatActivity
         categoriasRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         categoriasRv.setAdapter(categoriasAdapter);
         obtenerCategorias();
+    }
+
+    @Override
+    public void onScrollChanged(int deltaX, int deltaY) {
+
+        //Easy version.
+        /*int scrollY = mScrollView.getScrollY();
+        // Add parallax effect
+        imgContainer.setTranslationY(scrollY * 0.5f);*/
+
+        // Get scroll view screen bound
+        Rect scrollBounds = new Rect();
+        mScrollView.getHitRect(scrollBounds);
+
+        // Check if image container is visible in the screen
+        // so to apply the translation only when the container is visible to the user
+        if (imgContainer.getLocalVisibleRect(scrollBounds)) {
+            Display display = getWindowManager().getDefaultDisplay();
+            DisplayMetrics outMetrics = new DisplayMetrics();
+            display.getMetrics(outMetrics);
+            // Get screen density
+            float density = getResources().getDisplayMetrics().density;
+
+            // Get screen height in pixels
+            float dpHeight = outMetrics.heightPixels / density;
+            int screen_height_pixels = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpHeight, getResources().getDisplayMetrics());
+            int half_screen_height = screen_height_pixels / 2;
+
+            // Get image container height in pixels
+            int container_height_pixels = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, getResources().getDisplayMetrics());
+
+            // Get the location that consider a vertical center for the image (where the translation should be zero)
+            int center = half_screen_height - (container_height_pixels / 2);
+
+            // get the location (x,y) of the image container in pixels
+            int[] loc_screen = {0, 0};
+            imgContainer.getLocationOnScreen(loc_screen);
+
+            // trying to transform the current image container location into percentage
+            // so when the image container is exaclty in the middle of the screen percentage should be zero
+            // and as the image container getting closer to the edges of the screen should increase to 100%
+            int final_loc = ((loc_screen[1] - center) * 100) / half_screen_height;
+
+            // translate the inner image taking consideration also the density of the screen
+            mImageView.setTranslationY(-final_loc * 0.4f * density);
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
