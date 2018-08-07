@@ -13,7 +13,7 @@ public class Pelicula {
     private int duracion;
     private List<String> artistas;
     private double puntuacion;
-    private String videoUrl;
+    private String video_url;
 
 
     public Pelicula(String titulo,
@@ -63,11 +63,11 @@ public class Pelicula {
         this.imagenMini = imagenMini;
     }
 
-    public String getVideoUrl() {
-        return videoUrl;
+    public String getVideo_url() {
+        return video_url;
     }
 
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
+    public void setVideo_url(String video_url) {
+        this.video_url = video_url;
     }
 }

@@ -17,9 +17,6 @@ import com.google.gson.Gson;
 import com.tcv.peliculas.R;
 import com.tcv.peliculas.model.Pelicula;
 import com.tcv.peliculas.persistence.DatabaseHelper;
-import com.tcv.peliculas.persistence.Favorito;
-
-import java.util.List;
 
 public class PeliculaDetailsActivity extends AppCompatActivity {
 
@@ -66,7 +63,7 @@ public class PeliculaDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PeliculaDetailsActivity.this, VerPeliculaActivity.class);
-                intent.putExtra("link", pelicula.getVideoUrl());
+                intent.putExtra("link", pelicula.getVideo_url());
                 PeliculaDetailsActivity.this.startActivity(intent);
             }
         });
