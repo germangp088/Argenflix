@@ -59,13 +59,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CategoriasActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener, ObservableScrollView.OnScrollChangedListener{
     private static final String IMAGE_DIRECTORY = "/argenflix";
     private static final int CAMERA = 0;
     private static final int GALLERY = 1;
     private RecyclerView categoriasRv;
     private CategoriasListAdapter categoriasAdapter;
     private List<Categoria> categorias;
+    private ObservableScrollView mScrollView;
+    private View imgContainer;
 
     private static final int MY_PERMISSION_REQUEST_LOCATION = 1;
 
@@ -89,6 +91,11 @@ public class CategoriasActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        mScrollView = (ObservableScrollView)findViewById(R.id.scroll_view);
+        mScrollView.setOnScrollChangedListener(this);
+        // Store the reference of your image container
+        imgContainer = findViewById(R.id.img_container);
+
         //Agarrar el recyclerview de categorias
         categorias = new ArrayList<>();
         categoriasRv = (RecyclerView) findViewById(R.id.categorias_rv);
@@ -98,6 +105,13 @@ public class CategoriasActivity extends AppCompatActivity
         categoriasRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         categoriasRv.setAdapter(categoriasAdapter);
         obtenerCategorias();
+    }
+
+    @Override
+    public void onScrollChanged(int deltaX, int deltaY) {
+        int scrollY = mScrollView.getScrollY();
+        // Add parallax effect
+        imgContainer.setTranslationY(scrollY * 0.5f);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
