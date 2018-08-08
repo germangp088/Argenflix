@@ -30,7 +30,11 @@ public class FavoritesActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
         DatabaseHelper dbHelper = new DatabaseHelper(this);
 
         List<Favorito> favoritos = dbHelper.getAllFavoritos();
