@@ -43,9 +43,23 @@
                             android:id="@+id/img"
                             android:layout_width="match_parent"
                             android:layout_height="275dp"
-                            android:background="@drawable/black_panther"
+                            android:background="@drawable/startrek_khan"
                             android:scaleType="centerCrop" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerHorizontal="true"
+                            android:text="Estreno de la semana"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="35sp"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="25dp"/>
+
                     </FrameLayout>
+
 
                     <android.support.v7.widget.Toolbar
                         android:id="@+id/toolbar"

@@ -21,9 +21,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //@SuppressLint("ResourceType") ImageView a = (ImageView) setContentView(R.drawable.batman);
-
-
             if(credencialesExisten()) {
                 Intent intent =
                         new Intent(LoginActivity.this,

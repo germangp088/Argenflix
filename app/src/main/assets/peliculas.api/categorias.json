@@ -7,8 +7,8 @@
       {
         "id" : "1",
         "titulo" : "Star Wars El Ultimo Jedi",
-        "genero" : "Ciencia Ficcion",
-        "imagen" : "2131165318",
+        "genero" : "Pochocleraç",
+        "imagen" : "2131165333",
         "lanzamiento" : "14/12/2017",
         "small_img_url" : "http://media.gizmodo.co.uk/wp-content/uploads/2018/03/ku6bwrrv2kdk3kku3fyr.jpg",
         "large_img_url" : "https://zhaikeimgvdo.oss-cn-shenzhen.aliyuncs.com/wp-content/uploads/2017/12/p2504093296.jpg",
@@ -27,9 +27,9 @@
         "video_url" : "https://www.youtube.com/watch?v=Q0CbN8sfihY"
       },{
       "id" : "2",
-      "titulo" : "Star Wars El Primer Jedi",
+      "titulo" : "Star Wars La Venganza De Los Sith",
       "genero" : "Ciencia Ficcion",
-      "imagen" : "2131165318",
+      "imagen" : "2131165337",
       "lanzamiento" : "14/12/2017",
       "small_img_url" : "http://media.gizmodo.co.uk/wp-content/uploads/2018/03/ku6bwrrv2kdk3kku3fyr.jpg",
       "large_img_url" : "https://zhaikeimgvdo.oss-cn-shenzhen.aliyuncs.com/wp-content/uploads/2017/12/p2504093296.jpg",
@@ -48,9 +48,9 @@
       "video_url" : "https://www.youtube.com/watch?v=Q0CbN8sfihY"
     },{
       "id" : "3",
-      "titulo" : "Star Wars El Decimonoveno Jedi",
+      "titulo" : "Star Wars Una Nueva Esperanza",
       "genero" : "Ciencia Ficcion",
-      "imagen" : "2131165318",
+      "imagen" : "2131165336",
       "lanzamiento" : "14/12/2017",
       "small_img_url" : "http://media.gizmodo.co.uk/wp-content/uploads/2018/03/ku6bwrrv2kdk3kku3fyr.jpg",
       "large_img_url" : "https://zhaikeimgvdo.oss-cn-shenzhen.aliyuncs.com/wp-content/uploads/2017/12/p2504093296.jpg",
@@ -71,7 +71,7 @@
       "id" : "4",
       "titulo" : "Los Cazafantasmas",
       "genero" : "Ciencia Ficcion",
-      "imagen" : "2131165318",
+      "imagen" : "2131165284",
       "lanzamiento" : "14/12/2017",
       "small_img_url" : "http://media.gizmodo.co.uk/wp-content/uploads/2018/03/ku6bwrrv2kdk3kku3fyr.jpg",
       "large_img_url" : "https://zhaikeimgvdo.oss-cn-shenzhen.aliyuncs.com/wp-content/uploads/2017/12/p2504093296.jpg",
@@ -93,14 +93,14 @@
   },
   {
     "id": "2",
-    "titulo": "Ganas de romper cosas",
+    "titulo": "Viaje a las Estrellas",
     "peliculas" :
     [
       {
         "id": "5",
-        "titulo": "Batman El Caballero De La Noche",
-        "genero": "Accion",
-        "imagen": "2131165281",
+        "titulo": "Star Trek Beyond",
+        "genero": "Ciencia Ficcion",
+        "imagen": "2131165334",
         "lanzamiento": "17/07/2008",
         "small_img_url" : "https://elfinalde.com/wp-content/uploads/2016/02/hqkIcbrOHL86UncnHIsHVcVmzue-1024x576.jpg",
         "large_img_url" : "http://www.cultjer.com/img/ug_photo/2013_11/the_dark_knight_original20131105151212.jpg",
@@ -115,9 +115,9 @@
         "video_url" : "https://www.youtube.com/watch?v=EXeTwQWrcwY&t=82s"
       },{
       "id": "6",
-      "titulo": "Rompiendo Cosas",
+      "titulo": "Star Trek La Ira De Khan",
       "genero": "Accion",
-      "imagen": "2131165281",
+      "imagen": "2131165335",
       "lanzamiento": "17/07/2008",
       "small_img_url" : "https://elfinalde.com/wp-content/uploads/2016/02/hqkIcbrOHL86UncnHIsHVcVmzue-1024x576.jpg",
       "large_img_url" : "http://www.cultjer.com/img/ug_photo/2013_11/the_dark_knight_original20131105151212.jpg",
@@ -142,7 +142,7 @@
         "id" : "7",
         "titulo" : "Pantera Negra",
         "genero" : "Aventura",
-        "imagen" : "2131165278",
+        "imagen" : "2131165282",
         "lanzamiento" : "16/02/2018",
         "small_img_url" : "https://04.imgmini.eastday.com/mobile/20180503/20180503060516_7f2c9e072fc8207323fc7d99f70e9899_1.jpeg",
         "large_img_url" : "https://pbs.twimg.com/media/DdQ7Vg4VAAAXPvD.jpg",
