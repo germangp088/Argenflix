@@ -42,9 +42,7 @@ public class Favorito {
         return titulo;
     }
 
-    public String getImagenPelicula() {
-        return imagen;
-    }
+    public String getImagenPelicula() { return imagen; }
 
     public String getUsuario() {
         return usuario;

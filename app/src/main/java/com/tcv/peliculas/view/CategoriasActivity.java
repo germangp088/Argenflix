@@ -48,6 +48,7 @@ import com.tcv.peliculas.api.ApiClient;
 import com.tcv.peliculas.controller.Categorias.CategoriasListAdapter;
 import com.tcv.peliculas.controller.Categorias.CategoriasViewModel;
 import com.tcv.peliculas.model.Categoria;
+import com.tcv.peliculas.controller.Location.LocationViewModel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -74,8 +75,10 @@ public class CategoriasActivity extends AppCompatActivity
     private View imgContainer;
     private ImageView mImageView;
 
-    private static final int MY_PERMISSION_REQUEST_LOCATION = 1;
-
+    // Variables para la localización de la ciudad
+    private static final int LOCATION = 3;
+    private TextView cityName;
+    private LocationViewModel locationViewModel = new LocationViewModel(this);
 
     private CategoriasViewModel categoriasViewModel = new CategoriasViewModel(this);
     @Override
@@ -119,8 +122,6 @@ public class CategoriasActivity extends AppCompatActivity
         int scrollY = mScrollView.getScrollY();
         // Add parallax effect
         imgContainer.setTranslationY(scrollY * 1.3f);
-
-
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -197,33 +198,8 @@ public class CategoriasActivity extends AppCompatActivity
         TextView user = (TextView)findViewById(R.id.usuario);
         user.setText(usuario);
 
-        TextView ciudad = (TextView) findViewById(R.id.ciudad);
-        if (ContextCompat.checkSelfPermission(CategoriasActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-        {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(CategoriasActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION))
-            {
-                ActivityCompat.requestPermissions (CategoriasActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_REQUEST_LOCATION);
-            }
-            else
-            {
-                ActivityCompat.requestPermissions (CategoriasActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_REQUEST_LOCATION);
-            }
-        }
-        else
-        {
-            LocationManager locationManager = (LocationManager) getSystemService (Context.LOCATION_SERVICE);
-            Location location = locationManager.getLastKnownLocation (LocationManager.NETWORK_PROVIDER);
-            try
-            {
-                ciudad.setText ("Ciudad: " + GetHereLocation(location.getLatitude(), location.getLongitude()));
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace ();
-                Toast.makeText (CategoriasActivity.this, "Not found!", Toast.LENGTH_SHORT).show();
-                ciudad.setText("Ciudad no encontrada");
-            }
-        }
+        cityName = (TextView)findViewById(R.id.ciudad);
+        tryDisplayCityName();
     }
 
     private void showPictureDialog(){
@@ -273,29 +249,13 @@ public class CategoriasActivity extends AppCompatActivity
                             .show();
                 }
                 break;
-            case MY_PERMISSION_REQUEST_LOCATION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
-                    if (ContextCompat.checkSelfPermission(CategoriasActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                    {
-                        LocationManager locationManager = (LocationManager) getSystemService (Context.LOCATION_SERVICE);
-                        Location location = locationManager.getLastKnownLocation (LocationManager.NETWORK_PROVIDER);
-                        TextView ciudad = (TextView) findViewById(R.id.ciudad);
-                        try
-                        {
-                            ciudad.setText ("Ciudad: " + GetHereLocation(location.getLatitude(), location.getLongitude()));
-                        }
-                        catch (Exception e)
-                        {
-                            e.printStackTrace ();
-                            Toast.makeText (CategoriasActivity.this, "Not found!", Toast.LENGTH_SHORT).show();
-                            ciudad.setText ("Ciudad no encontrada");
-                        }
-                    }
-                }
-                else
-                {
-                    Toast.makeText (this, "No permission granted!", Toast.LENGTH_SHORT).show();
+            case LOCATION:
+                if(grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    displayCityName();
+                } else {
+                    cityName.setText("City not found");
                 }
                 break;
             default:
@@ -429,29 +389,23 @@ public class CategoriasActivity extends AppCompatActivity
         finish();
     }
 
-    // get closest city name
-    private String GetHereLocation (double lat, double lon)
-    {
-        String curCity = "";
-        Geocoder geocoder = new Geocoder (CategoriasActivity.this, Locale.getDefault());
-        List<Address> addressList;
-        try
-        {
-            addressList = geocoder.getFromLocation (lat, lon, 1);
-            if (addressList.size() > 0)
-            {
-                curCity = addressList.get(0).getLocality();
-            }
-            else
-            {
-                curCity = "City not found!";
-            }
+    private void displayCityName() {
+        cityName.setText(locationViewModel.getCityName());
+    }
+
+    private void tryDisplayCityName() {
+        //Chequeo por permisos primero
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION);
+        } else {
+            displayCityName();
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return curCity;
     }
 }
 

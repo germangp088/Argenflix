@@ -62,7 +62,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(Favorito.COLUMN_PELICULA_ID, pelicula.getId());
         values.put(Favorito.COLUMN_USUARIO, usuario);
         values.put(Favorito.COLUMN_PELICULA_TITULO, pelicula.getTitulo());
-        values.put(Favorito.COLUMN_PELICULA_IMAGEN, pelicula.getImagenMini());
+        values.put(Favorito.COLUMN_PELICULA_IMAGEN, pelicula.getImagen());
         insertContent(values, db);
     }
 

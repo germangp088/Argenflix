@@ -63,12 +63,15 @@ public class FavoritosListAdapter extends RecyclerView.Adapter<RecyclerView.View
         public FavoritoViewHolder(View itemView) {
             super(itemView);
             tituloTv = itemView.findViewById(R.id.titulo);
-            imagenTv = itemView.findViewById(R.id.imagen);
+            imagenTv = itemView.findViewById(R.id.imagen_favorito);
         }
 
         public void bind(final Favorito favorito) {
-            tituloTv.setText(favorito.getTituloPelicula());
-            Glide.with(context).load(favorito.getImagenPelicula()).into(imagenTv);
+            String titulo = favorito.getTituloPelicula();
+            tituloTv.setText(titulo);
+            int imagen = Integer.parseInt(favorito.getImagenPelicula());
+            Glide.with(context).load(imagen).into(imagenTv);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
